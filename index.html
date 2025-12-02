@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KESAFIN Кликер</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .title {
+            font-size: 3.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .description {
+            font-size: 1.2em;
+            color: #b8b8b8;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .stats-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .level-counter {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 8px 20px;
+            border: 2px solid rgba(255, 107, 107, 0.3);
+            border-radius: 10px;
+        }
+
+        .coin-counter {
+            font-size: 2.2em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff88, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding: 10px 30px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .level-progress {
+            width: 400px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .level-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00ccff);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .level-info {
+            font-size: 1.1em;
+            color: #b8b8b8;
+            margin-top: 5px;
+        }
+
+        .click-power {
+            font-size: 1.3em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 10px 0;
+        }
+
+        .bank-card {
+            width: 300px;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bank-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .bank-card:active {
+            transform: scale(0.95);
+        }
+
+        .card-chip {
+            width: 50px;
+            height: 40px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 8px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+
+.card-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+        }
+
+        .upgrades-section {
+            text-align: center;
+            margin: 30px 0 20px 0;
+        }
+
+        .upgrades-title {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .upgrades-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 0 20px;
+            max-width: 600px;
+        }
+
+        .upgrade {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .upgrade-purchased {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: rgba(0, 255, 136, 0.5);
+        }
+
+        .upgrade-available {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.5);
+            cursor: pointer;
+        }
+
+        .upgrade-available:hover {
+            background: rgba(255, 215, 0, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .upgrade-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #ffd700;
+        }
+
+        .upgrade-description {
+            font-size: 0.9em;
+            color: #b8b8b8;
+            margin-bottom: 10px;
+        }
+
+        .upgrade-price {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #00ff88;
+        }
+
+        .upgrade-purchased .upgrade-price {
+            color: #00ccff;
+        }
+
+        .click-effect {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: clickAnimation 0.5s ease-out;
+        }
+
+        .level-up {
+            animation: levelUpAnimation 1s ease-out;
+        }
+
+        @keyframes clickAnimation {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        @keyframes levelUpAnimation {
+            0% {
+                transform: scale(1);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            50% {
+                transform: scale(1.1);
+                background: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
+            }
+            100% {
+                transform: scale(1);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">KESAFIN</div>
+        <div class="description">кликай и зарабатывай монеты на kasafin</div>
+    </div>
+
+    <div class="stats-container">
+        <div class="level-counter" id="levelCounter">Уровень: 1</div>
+        <div class="coin-counter" id="coinCounter">0 монет</div>
+        <div class="click-power" id="clickPower">Сила клика: 1 монета</div>
+        
+        <div class="level-progress">
+            <div class="level-progress-bar" id="levelProgressBar"></div>
+        </div>
+        <div class="level-info" id="levelInfo">0/10 монет до следующего уровня</div>
+    </div>
+
+    <div class="bank-card" id="bankCard">
+        <div class="card-chip"></div>
+        <div class="card-text">Кликай для заработка!</div>
+    </div>
+
+
+<div class="upgrades-section">
+        <div class="upgrades-title">Улучшения</div>
+        <div class="upgrades-container" id="upgradesContainer">
+            <!-- Улучшения будут добавляться через JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        let coins = 0;
+        let level = 1;
+        let coinsForNextLevel = 10;
+        let clickPower = 1;
+        
+        const coinCounter = document.getElementById('coinCounter');
+        const levelCounter = document.getElementById('levelCounter');
+        const levelProgressBar = document.getElementById('levelProgressBar');
+        const levelInfo = document.getElementById('levelInfo');
+        const clickPowerDisplay = document.getElementById('clickPower');
+        const bankCard = document.getElementById('bankCard');
+        const upgradesContainer = document.getElementById('upgradesContainer');
+
+        // Список улучшений
+        const upgrades = [
+            {
+                id: 1,
+                name: "Улучшенный клик",
+                description: "Увеличивает доход за клик до 2 монет",
+                basePrice: 50,
+                powerIncrease: 1,
+                purchased: false
+            },
+            {
+                id: 2,
+                name: "Профессиональный клик",
+                description: "Увеличивает доход за клик до 3 монет",
+                basePrice: 150,
+                powerIncrease: 1,
+                purchased: false
+            },
+            {
+                id: 3,
+                name: "Золотой клик",
+                description: "Увеличивает доход за клик до 5 монет",
+                basePrice: 500,
+                powerIncrease: 2,
+                purchased: false
+            },
+            {
+                id: 4,
+                name: "Платиновый клик",
+                description: "Увеличивает доход за клик до 8 монет",
+                basePrice: 1200,
+                powerIncrease: 3,
+                purchased: false
+            },
+            {
+                id: 5,
+                name: "Алмазный клик",
+                description: "Увеличивает доход за клик до 12 монет",
+                basePrice: 3000,
+                powerIncrease: 4,
+                purchased: false
+            },
+            {
+                id: 6,
+                name: "Легендарный клик",
+                description: "Увеличивает доход за клик до 20 монет",
+                basePrice: 8000,
+                powerIncrease: 8,
+                purchased: false
+            }
+        ];
+
+        function updateCounter() {
+            coinCounter.textContent = coins + ' монет';
+            levelCounter.textContent = 'Уровень: ' + level;
+            clickPowerDisplay.textContent = 'Сила клика: ' + clickPower + ' монет';
+            
+            // Обновляем прогресс-бар
+            const progress = (coins / coinsForNextLevel) * 100;
+            levelProgressBar.style.width = Math.min(progress, 100) + '%';
+            
+            // Обновляем информацию о прогрессе
+            const coinsNeeded = coinsForNextLevel - coins;
+            levelInfo.textContent = coinsNeeded > 0 ? 
+                coinsNeeded + ' монет до следующего уровня' : 
+                'Максимальный уровень!';
+        }
+
+        function checkLevelUp() {
+            if (coins >= coinsForNextLevel) {
+                level++;
+                coinsForNextLevel = Math.floor(coinsForNextLevel * 1.5);
+                
+                // Анимация повышения уровня
+                bankCard.classList.add('level-up');
+                setTimeout(() => {
+                    bankCard.classList.remove('level-up');
+                }, 1000);
+                
+                return true;
+            }
+            return false;
+        }
+
+        function createClickEffect(x, y) {
+            const effect = document.createElement('div');
+
+
+effect.className = 'click-effect';
+            effect.style.left = (x - 25) + 'px';
+            effect.style.top = (y - 25) + 'px';
+            bankCard.appendChild(effect);
+            
+            setTimeout(() => {
+                effect.remove();
+            }, 500);
+        }
+
+        function purchaseUpgrade(upgradeId) {
+            const upgrade = upgrades.find(u => u.id === upgradeId);
+            
+            if (upgrade && !upgrade.purchased && coins >= upgrade.basePrice) {
+                // Списание монет
+                coins -= upgrade.basePrice;
+                
+                // Увеличение силы клика
+                clickPower += upgrade.powerIncrease;
+                upgrade.purchased = true;
+                
+                // Обновление интерфейса
+                updateCounter();
+                renderUpgrades();
+                
+                return true;
+            }
+            return false;
+        }
+
+        function renderUpgrades() {
+            upgradesContainer.innerHTML = '';
+            
+            upgrades.forEach(upgrade => {
+                const upgradeElement = document.createElement('div');
+                
+                if (upgrade.purchased) {
+                    upgradeElement.className = 'upgrade upgrade-purchased';
+                } else if (coins >= upgrade.basePrice) {
+                    upgradeElement.className = 'upgrade upgrade-available';
+                    upgradeElement.onclick = () => purchaseUpgrade(upgrade.id);
+                } else {
+                    upgradeElement.className = 'upgrade';
+                }
+                
+                upgradeElement.setAttribute('data-upgrade-id', upgrade.id);
+                
+                upgradeElement.innerHTML = 
+                    <div class="upgrade-name">${upgrade.name}</div>
+                    <div class="upgrade-description">${upgrade.description}</div>
+                    <div class="upgrade-price">
+                        ${upgrade.purchased ? 'КУПЛЕНО' : upgrade.basePrice + ' монет'}
+                    </div>
+                ;
+                
+                upgradesContainer.appendChild(upgradeElement);
+            });
+        }
+
+        bankCard.addEventListener('click', function(event) {
+            // Добавляем монеты с учетом силы клика
+            coins += clickPower;
+            
+            // Проверяем повышение уровня
+            const leveledUp = checkLevelUp();
+            
+            // Обновляем интерфейс
+            updateCounter();
+            renderUpgrades();
+            
+            // Создаем эффект клика
+            const rect = bankCard.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            createClickEffect(x, y);
+            
+            // Анимация карты
+            bankCard.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                bankCard.style.transform = 'scale(1)';
+            }, 100);
+        });
+
+        // Инициализация
+        updateCounter();
+        renderUpgrades();
+    </script>
+</body>
+</html>
